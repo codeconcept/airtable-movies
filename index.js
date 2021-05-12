@@ -6,9 +6,29 @@ const apiKey = keys.apiKey;
 
 let formatedMovies = [];
 const moviesDiv = document.querySelector('.movies');
+const addMovieForm = document.getElementById('addmovie');
+
+addMovieForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  new FormData(addMovieForm);
+});
+
+addMovieForm.addEventListener('formdata', (e) => {
+  // https://developer.mozilla.org/fr/docs/Web/API/FormData/FormData
+  let data = e.formData;
+
+  // genre requires to use getAll() as select has the multiple attribute
+  const newMovie = {
+    title: data.get('movietitle'),
+    year: data.get('movieyear'),
+    genre: data.getAll('moviegenre'),
+  };
+  console.log(newMovie, data.values());
+
+});
 
 function init() {
-  getMovies();
+    getMovies();
 }
 
 init();
