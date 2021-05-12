@@ -1,10 +1,6 @@
-import keys from './keys.js';
-import utils from './utils.js';
+import db from './db.js';
 
-const url = `https://api.airtable.com/v0/${keys.db}/Movies`;
-const apiKey = keys.apiKey;
-
-let formatedMovies = [];
+let formattedMovies = [];
 const moviesDiv = document.querySelector('.movies');
 const addMovieForm = document.getElementById('addmovie');
 
@@ -13,7 +9,7 @@ addMovieForm.addEventListener('submit', (e) => {
   new FormData(addMovieForm);
 });
 
-addMovieForm.addEventListener('formdata', (e) => {
+addMovieForm.addEventListener('formdata', async (e) => {
   // https://developer.mozilla.org/fr/docs/Web/API/FormData/FormData
   let data = e.formData;
 
@@ -24,30 +20,20 @@ addMovieForm.addEventListener('formdata', (e) => {
     genre: data.getAll('moviegenre'),
   };
   console.log(newMovie, data.values());
-  postMovie(newMovie);
+  const postedMovie = await db.postMovie(newMovie);
+  console.log('postMovie() | postedMovie', postedMovie);
+  
+  // to refresh the displayed movie and see our added movie :)
+  formattedMovies = await db.getMovies();
+  displayMovies(formattedMovies);
 });
 
-function init() {
-  getMovies();
+async function init() {
+  formattedMovies = await db.getMovies();
+  displayMovies(formattedMovies);
 }
 
 init();
-
-async function getMovies() {
-  const response = await fetch(`${url}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-  });
-  const data = await response.json();
-  const movies = data.records;
-
-  formatedMovies = utils.formatData(movies);
-  console.log('formatedMovies', formatedMovies);
-  displayMovies(formatedMovies);
-}
 
 function displayMovies(movies) {
   const cards = movies.map(
@@ -59,24 +45,3 @@ function displayMovies(movies) {
     `;
 }
 
-async function postMovie(movie) {
-  const payload = {
-    records: [
-      {
-        fields: movie,
-      },
-    ],
-  };
-  const response = await fetch(`${url}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify(payload),
-  });
-  const data = await response.json();
-  console.log('postMovie()', data);
-  // to refresh the displayed movie and see our added movie :)
-  getMovies();
-}
