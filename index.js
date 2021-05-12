@@ -20,15 +20,15 @@ addMovieForm.addEventListener('formdata', (e) => {
   // genre requires to use getAll() as select has the multiple attribute
   const newMovie = {
     title: data.get('movietitle'),
-    year: data.get('movieyear'),
+    year: Number(data.get('movieyear')),
     genre: data.getAll('moviegenre'),
   };
   console.log(newMovie, data.values());
-
+  postMovie(newMovie);
 });
 
 function init() {
-    getMovies();
+  getMovies();
 }
 
 init();
@@ -57,4 +57,26 @@ function displayMovies(movies) {
     <h2>Tous les films</h2>
     ${cards.join('')}
     `;
+}
+
+async function postMovie(movie) {
+  const payload = {
+    records: [
+      {
+        fields: movie,
+      },
+    ],
+  };
+  const response = await fetch(`${url}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify(payload),
+  });
+  const data = await response.json();
+  console.log('postMovie()', data);
+  // to refresh the displayed movie and see our added movie :)
+  getMovies();
 }
