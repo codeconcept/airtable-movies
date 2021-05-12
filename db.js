@@ -1,7 +1,7 @@
 import keys from './keys.js';
 import utils from './utils.js';
 
-const url = `https://api.airtable.com/v0/${keys.db}/Movies`;
+const url = `https://api.airtable.com/v0/${keys.db}/Movies?sort[0][field]=year&sort[0][direction]=desc`;
 const apiKey = keys.apiKey;
 async function getMovies() {
   const response = await fetch(`${url}`, {
