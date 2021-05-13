@@ -22,7 +22,7 @@ addMovieForm.addEventListener('formdata', async (e) => {
   console.log(newMovie, data.values());
   const postedMovie = await db.postMovie(newMovie);
   console.log('postMovie() | postedMovie', postedMovie);
-  
+
   // to refresh the displayed movie and see our added movie :)
   formattedMovies = await db.getMovies();
   displayMovies(formattedMovies);
@@ -36,12 +36,22 @@ async function init() {
 init();
 
 function displayMovies(movies) {
-  const cards = movies.map(
-    (m) => `<div class="card">${m.title} (${m.year})</div>`
-  );
-  moviesDiv.innerHTML = `
-    <h2>Tous les films</h2>
-    ${cards.join('')}
-    `;
+  const table = new Tabulator('#example-table', {
+    height: 220, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+    data: movies, //assign data to table
+    layout: 'fitColumns', //fit columns to width of table (optional)
+    pagination: 'local',
+    paginationSize: 3,
+    columns: [
+      //Define Table Columns
+      { title: 'Titre', field: 'title'},
+      { title: 'Année', field: 'year'},
+    ],
+    rowClick: function (e, row) {
+      //trigger an alert message when the row is clicked
+      alert('Row ' + row.getData().id + ' Clicked!!!!');
+    },
+  });
+  table.setLocale('fr'); //set locale to french
+  console.log(table.getLang());
 }
-

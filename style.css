@@ -38,3 +38,7 @@ body {
   margin: 5px 0px;
   text-transform: uppercase;
 }
+
+.tabulator {
+  font-size: 20px;
+}
