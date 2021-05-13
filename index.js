@@ -44,14 +44,25 @@ function displayMovies(movies) {
     paginationSize: 3,
     columns: [
       //Define Table Columns
-      { title: 'Titre', field: 'title'},
-      { title: 'Année', field: 'year'},
+      { title: 'Titre', field: 'title' },
+      { title: 'Année', field: 'year' },
     ],
     rowClick: function (e, row) {
-      //trigger an alert message when the row is clicked
-      alert('Row ' + row.getData().id + ' Clicked!!!!');
+      alertify.confirm(
+        `Supprimer "${row.getData().title}" ?`,
+        'Cliquer sur "OK" pour confirmer la suppression du film',
+        async function () {
+          const response = await db.deleteMovie(row.getData().id);
+          console.log('alertify delete response', response);
+          init();
+          alertify.success('Film supprimé');
+        },
+        function () {
+          // alertify.error('Suppression annulée');
+        }
+      );
     },
   });
   table.setLocale('fr'); //set locale to french
-  console.log(table.getLang());
 }
+

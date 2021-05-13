@@ -2,7 +2,9 @@ import keys from './keys.js';
 import utils from './utils.js';
 
 const url = `https://api.airtable.com/v0/${keys.db}/Movies?sort[0][field]=year&sort[0][direction]=desc`;
+const baseUrl = `https://api.airtable.com/v0/${keys.db}/Movies`;
 const apiKey = keys.apiKey;
+
 async function getMovies() {
   const response = await fetch(`${url}`, {
     method: 'GET',
@@ -39,7 +41,20 @@ async function postMovie(movie) {
   return data;
 }
 
+async function deleteMovie(movieId) {
+  const response = await fetch(`${baseUrl}/${movieId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+    },
+  });
+  // data should look like {deleted: true, id: "recQQ8ejKEJ76Co1f"}
+  const data = await response.json();
+  return data;
+}
+
 export default {
   getMovies,
   postMovie,
+  deleteMovie,
 };
