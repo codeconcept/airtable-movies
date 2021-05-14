@@ -3,7 +3,7 @@ import db from './db.js';
 let formattedMovies = [];
 const moviesDiv = document.querySelector('.movies');
 const addMovieForm = document.getElementById('addmovie');
-const exampleTable = document.getElementById('example-table')
+const exampleTable = document.getElementById('example-table');
 
 exampleTable.addEventListener(
   'contextmenu',
@@ -74,12 +74,60 @@ function displayMovies(movies) {
     },
     rowContext: function (e, row) {
       // alert('Row ' + row.getIndex() + ' Context Clicked!!!!');
-      createUpdateDialog(row.getData())
+      createUpdateDialog(row.getData());
     },
   });
   table.setLocale('fr'); //set locale to french
 }
 
 function createUpdateDialog(rowData) {
-  console.log(rowData)
+  console.log(rowData);
+  const clonedForm = addMovieForm.cloneNode(true);
+  console.log(clonedForm);
+
+  // populate with existing data
+  clonedForm.querySelector('#movietitle').value = rowData.title;
+  clonedForm.querySelector('#movieyear').value = rowData.year;
+  // select all options for genre
+  clonedForm.querySelector('#moviegenre').value = rowData.genre;
+  const allGenres = clonedForm.querySelector('#moviegenre');
+  for (let i = 0; i < allGenres.length; i++) {
+    allGenres.options[i].selected =
+      rowData.genre.indexOf(allGenres.options[i].value) >= 0;
+  }
+  // clonedForm.querySelector('#addmovie > div:nth-child(4) > button').innerText =
+  //   'modifier le film';
+  clonedForm.querySelector('.btn').innerText =
+  'modifier le film';
+
+  alertify.minimalDialog ||
+    alertify.dialog('minimalDialog', function () {
+      return {
+        main: function (content) {
+          this.setContent(content);
+        },
+        setup: function () {
+          return {
+            options: {
+              maximizable: true,
+              closableByDimmer: true,
+              resizable: false,
+              transition: 'fade',
+              /*disable autoReset, to prevent the dialog from resetting it's size on window resize*/
+              autoReset: false,
+            },
+          };
+        },
+        prepare: function () {
+          this.elements.footer.style.visibility = 'hidden';
+        },
+        hooks: {
+          onshow: function () {
+            this.elements.dialog.style.maxWidth = 'none';
+            this.elements.dialog.style.width = '70%';
+          },
+        },
+      };
+    });
+  alertify.minimalDialog(clonedForm).setHeader(`Modifier "${rowData.title}"`);
 }

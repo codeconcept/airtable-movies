@@ -23,6 +23,16 @@ body {
   height: 100px;
 }
 
+.formitem-select {
+  display: flex;
+  flex-direction: column;
+  height: 180px;
+}
+
+.formitem-select select {
+  height: 170px;
+}
+
 .formitem label {
   text-transform: uppercase;
 }
