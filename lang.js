@@ -10,9 +10,9 @@ Tabulator.prototype.extendModule('localize', 'langs', {
         first_title: 'Première page', //tooltip text for the first page button
         last: 'Dernière',
         last_title: 'Dernière page',
-        prev: 'Préc',
+        prev: 'Préc.',
         prev_title: 'Page préc',
-        next: 'Suivante',
+        next: 'Suiv.',
         next_title: 'Page suiv.',
         all: 'Tout',
       },
