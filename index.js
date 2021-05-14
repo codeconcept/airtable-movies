@@ -3,6 +3,16 @@ import db from './db.js';
 let formattedMovies = [];
 const moviesDiv = document.querySelector('.movies');
 const addMovieForm = document.getElementById('addmovie');
+const exampleTable = document.getElementById('example-table')
+
+exampleTable.addEventListener(
+  'contextmenu',
+  function (e) {
+    // alert("You've tried to open context menu"); //here you draw your own menu
+    e.preventDefault();
+  },
+  false
+);
 
 addMovieForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -62,7 +72,14 @@ function displayMovies(movies) {
         }
       );
     },
+    rowContext: function (e, row) {
+      // alert('Row ' + row.getIndex() + ' Context Clicked!!!!');
+      createUpdateDialog(row.getData())
+    },
   });
   table.setLocale('fr'); //set locale to french
 }
 
+function createUpdateDialog(rowData) {
+  console.log(rowData)
+}
