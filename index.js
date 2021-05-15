@@ -1,7 +1,6 @@
 import db from './db.js';
 
 let formattedMovies = [];
-const moviesDiv = document.querySelector('.movies');
 const addMovieForm = document.getElementById('addmovie');
 const exampleTable = document.getElementById('example-table');
 
@@ -32,6 +31,11 @@ addMovieForm.addEventListener('formdata', async (e) => {
   console.log(newMovie, data.values());
   const postedMovie = await db.postMovie(newMovie);
   console.log('postMovie() | postedMovie', postedMovie);
+  if (postedMovie.records.length === 1) {
+    alertify
+      .alert(`Film créé avec l'id ${postedMovie.records[0].id}`)
+      .setHeader('Film ajouté');
+  }
 
   // to refresh the displayed movie and see our added movie :)
   formattedMovies = await db.getMovies();
@@ -102,7 +106,7 @@ function createUpdateDialog(rowData) {
     e.preventDefault();
     const formElements = clonedForm.elements;
     console.log('submit update', formElements);
-    // we cast to an array all options, then filter to keep only the selected one, then map each option to its value
+    // we cast to an array all options, then filter to keep only the selected ones, then map each option to its value
     const allSelectedGenres = [...formElements[2].options]
       .filter((option) => option.selected)
       .map((option) => option.value);
