@@ -97,8 +97,30 @@ function createUpdateDialog(rowData) {
   }
   // clonedForm.querySelector('#addmovie > div:nth-child(4) > button').innerText =
   //   'modifier le film';
-  clonedForm.querySelector('.btn').innerText =
-  'modifier le film';
+  clonedForm.querySelector('.btn').innerText = 'modifier le film';
+  clonedForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formElements = clonedForm.elements;
+    console.log('submit update', formElements);
+    // we cast to an array all options, then filter to keep only the selected one, then map each option to its value
+    const allSelectedGenres = [...formElements[2].options]
+      .filter((option) => option.selected)
+      .map((option) => option.value);
+    const movieEdited = {
+      id: rowData.id,
+      fields: {
+        title: formElements[0].value,
+        year: Number(formElements[1].value),
+        genre: allSelectedGenres,
+      },
+    };
+    console.log('movieEdited', movieEdited);
+    const data = await db.updateMovie(movieEdited);
+    console.log('data', data);
+    if (data.records.length === 1) {
+      alertify.alert('Mise à jour effectuée').setHeader('Modification réussie');
+    }
+  });
 
   alertify.minimalDialog ||
     alertify.dialog('minimalDialog', function () {

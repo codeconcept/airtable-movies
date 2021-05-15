@@ -53,8 +53,27 @@ async function deleteMovie(movieId) {
   return data;
 }
 
+async function updateMovie(movie) {
+  const payload = {
+    records: [
+      movie
+    ],
+  };
+  const response = await fetch(baseUrl, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+  const data = await response.json();
+  return data;
+}
+
 export default {
   getMovies,
   postMovie,
   deleteMovie,
+  updateMovie
 };
