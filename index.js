@@ -123,6 +123,7 @@ function createUpdateDialog(rowData) {
     console.log('data', data);
     if (data.records.length === 1) {
       alertify.alert('Mise à jour effectuée').setHeader('Modification réussie');
+      alertify.minimalDialog().close();
     }
   });
 
